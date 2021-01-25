@@ -23,12 +23,13 @@ public class ChattingController {
 
     //## 네이밍 전체적으로 수정해야함
     @PostMapping("/send/message")
-    public ResponseEntity<Void> sendMessage(@RequestHeader(value = "x-forward-email") String email,
-                                            @RequestHeader(value = "x-forward-nickname") String nickname,
+    public ResponseEntity<Void> sendMessage(/*@RequestHeader(value = "x-forward-email") String email,
+                                            @RequestHeader(value = "x-forward-nickname") String nickname,*/
                                             @RequestBody ChattingTextDTO chattingData) {
         //## socket 통신
         //## 채팅을 친 유저의 정보는 x-forward-email, x-forward-nickname으로 알 수 있음.
-        chattingHandler.sendChatting(chattingData, nickname);
+        log.info("[send Message] chattingData roomIdx : " + chattingData.getRoomIdx() + "  " + chattingData.getTextMessage());
+        chattingHandler.sendChatting(chattingData, "가희");
 
         return ResponseEntity
                 .status(HttpStatus.OK)

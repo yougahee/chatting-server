@@ -44,6 +44,7 @@ public class ChattingHandler extends TextWebSocketHandler {
             log.warn("[Handler::afterConnectionClosed] status: {}, sessionId: {}", status, session.getId());
             log.warn("Chatting WebSocket 비정상적 연결 끊김 and SessionId : " + session.getId());
         }
+        log.info("연결 끊긴 status : " + status.toString());
         log.info("Chatting WebSocket 정상적으로 연결 끊김 SessionId : " + session.getId());
         sessions.remove(session);
     }
@@ -55,7 +56,6 @@ public class ChattingHandler extends TextWebSocketHandler {
 
         log.info("Incoming message: {}", jsonMessage);
         log.debug("Incoming message: {}", jsonMessage);
-
 
         switch (jsonMessage.get("id").getAsString()) {
             case "start":
@@ -74,8 +74,10 @@ public class ChattingHandler extends TextWebSocketHandler {
     }
 
     public void sendChatting(ChattingTextDTO chattingTextDTO, String nickname) {
-
+        log.info("roonIdx : " + chattingTextDTO.getRoomIdx());
         WebSocketSession session = sessions.get(chattingTextDTO.getRoomIdx());
+
+        log.info("[send Chatting] session : " + session);
 
         try {
             JsonObject response = new JsonObject();
@@ -85,7 +87,11 @@ public class ChattingHandler extends TextWebSocketHandler {
             response.addProperty("message", chattingTextDTO.getTextMessage());
             response.addProperty("time", time);
             session.sendMessage(new TextMessage(response.toString()));
+
+            log.info("[send Chatting] success : " + response.toString());
+
         } catch (Throwable t) {
+            log.error("[send Chatting] error : " + t.getMessage());
             sendError(session, t.getMessage());
         }
     }
