@@ -3,8 +3,39 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="4fb08bfb-b87a-41c7-83ee-e0d24388dbd6" name="Default Changelist" comment="" />
+    <list default="true" id="4fb08bfb-b87a-41c7-83ee-e0d24388dbd6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chatting_server/src/main/resources/static/js/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/chatting_server/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/src/main/java/com/morse/chatting_server/config/WebSocketConfigure.java" beforeDir="false" afterPath="$PROJECT_DIR$/chatting_server/src/main/java/com/morse/chatting_server/config/WebSocketConfigure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/src/main/java/com/morse/chatting_server/controller/ChattingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/chatting_server/src/main/java/com/morse/chatting_server/controller/ChattingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/chatting_server/src/main/resources/static/index.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,15 +64,18 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="HTML File" />
+        <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Educational Edition 2020.2.4\plugins\maven\lib\maven3" />
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -54,8 +88,15 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../user" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.3034483" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunManager">
     <configuration name="ChattingServerApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -88,30 +129,57 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="225" key="#com.intellij.ide.util.MemberChooser" timestamp="1611536287589">
+    <state x="727" y="0" key="#Auto_Import" timestamp="1611536844669">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="225" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611536287589" />
-    <state width="1877" height="2" key="GridCell.Tab.0.bottom" timestamp="1610930493928">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state x="727" y="0" key="#Auto_Import/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611536844669" />
+    <state x="765" y="225" key="#com.intellij.ide.util.MemberChooser" timestamp="1611538989585">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="765" y="225" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611538989585" />
+    <state x="761" y="344" key="FileChooserDialogImpl" timestamp="1611553921666">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="761" y="344" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611553921666" />
+    <state width="1877" height="426" key="GridCell.Tab.0.bottom" timestamp="1611554439572">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="426" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611554439572" />
     <state width="1877" height="2" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610930493928" />
-    <state width="1877" height="2" key="GridCell.Tab.0.center" timestamp="1610930493928">
-      <screen x="1920" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1877" height="2" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610930493928" />
-    <state width="1877" height="2" key="GridCell.Tab.0.left" timestamp="1610930493928">
-      <screen x="1920" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1877" height="2" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610930493928" />
-    <state width="1877" height="2" key="GridCell.Tab.0.right" timestamp="1610930493928">
-      <screen x="1920" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1877" height="2" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610930493928" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1611536473564">
+    <state width="1877" height="426" key="GridCell.Tab.0.center" timestamp="1611554439571">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611536473564" />
+    <state width="1877" height="426" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611554439571" />
+    <state width="1877" height="2" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610930493928" />
+    <state width="1877" height="426" key="GridCell.Tab.0.left" timestamp="1611554439571">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="426" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611554439571" />
+    <state width="1877" height="2" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610930493928" />
+    <state width="1877" height="426" key="GridCell.Tab.0.right" timestamp="1611554439571">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="426" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611554439571" />
+    <state width="1877" height="2" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610930493928" />
+    <state x="500" y="171" key="SettingsEditor" timestamp="1611553100394">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="500" y="171" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611553100394" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1611550910988">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611550910988" />
   </component>
 </project>
