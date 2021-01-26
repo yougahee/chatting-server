@@ -5,29 +5,28 @@
 ## 사용 프레임워크
 - Spring boot 
 
+</br>
+</br>
+
 ## :pushpin: 무엇을 만들 것 인가? 
 - 로그 관리 및 Presenter(=Streamer) 와 연결해주는 채팅서버 구현
 
 </br>
 </br>
-0
-<img src =>
 
-
-
-</br>
-</br>
-</br>
 
 ## :pushpin: Flow
 1. Presenter가 방송을 시작하면 시그널링 서버와 채팅서버에 각각 한 개씩 WebSocket을 연결시킨다.
 	- Viewer인 경우는 시그널링 서버에만 WebSocket을 연결하면 된다.
-2. 
+	- Presenter와 채팅 서버 사이의 WebSocket은 채팅서버에 들어온 Message들을 Presenter에게 넘겨주는 역할을 하는 Socket
+2. Presenter/Viewer 사용자 모두는 채팅을 token, roomIdx, textMessage 데이터와 함께 HTTP 통신을 한다. 
+3. 채팅서버로 들어온 Message를 확인하고 room에 해당하는 Presenter에게 TextMessage를 넘겨준다.
+4. Presenter는 채팅과 연결된 WebSocket에 데이터가 들어오면 Data-Channel을 통해 Text Message를 보낸다. 
+	- Presenter를 구독하고 있는 모든 Viewer들은 Data Channel을 통해 채팅을 받을 수 있다.
 
 <img src = >
 
 </br>
-
 
 ## :pushpin: 
 
@@ -35,20 +34,7 @@
 
 </br>
 </br>
-
-## :pushpin: 기능 구현
-
-
 </br>
-</br>
-</br>
-
-## :pushpin:
-<img src =>
-
-
-
-</br></br>
 </br>
 
 # :pushpin: dependencies
