@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.morse.chatting_server.dto.request.ChattingData;
+import com.morse.chatting_server.exception.NotFoundException;
+import com.morse.chatting_server.utils.ResponseMessage;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,7 @@ public class ChattingHandlerService extends TextWebSocketHandler {
 
     private static HashMap<Long,WebSocketSession> sessions = new HashMap<>();
     private static final Gson gson = new GsonBuilder().create();
+    private ResponseMessage MESSAGE = new ResponseMessage();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -45,6 +48,8 @@ public class ChattingHandlerService extends TextWebSocketHandler {
             log.warn("Chatting WebSocket 비정상적 연결 끊김 and SessionId : " + session.getId());
         }
         log.info("Chatting WebSocket 정상적으로 연결 끊김 SessionId : " + session.getId());
+
+        //## 수정해야함
         sessions.remove(session);
     }
 
@@ -57,7 +62,6 @@ public class ChattingHandlerService extends TextWebSocketHandler {
 
         switch (jsonMessage.get("id").getAsString()) {
             case "roomIdx":
-                // ##redis로 바꿀 수 -> 직렬화문제?
                 long roomIdx = Long.parseLong(jsonMessage.get("roomIdx").getAsString());
                 sessions.put(roomIdx, session);
                 log.info("Presenter로부터 room의 값을 가져옴 -> roomIdx : " + roomIdx);
@@ -70,6 +74,12 @@ public class ChattingHandlerService extends TextWebSocketHandler {
 
     public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String nickname) {
         WebSocketSession session = sessions.get(chattingTextDTO.getRoomIdx());
+        //## Presenter가 보냈는데 session이 null일 수 가 있나? ->
+        if(session == null) throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
+
+        //## 맞는 세션이 없다면? 어떻게 처리할 것인지?
+        //## 해당 룸이 아직 살아있는지? 실시간 스트리밍 되고 있는지 파악 ( Redis 접근 )
+        //## 룸서버에서 뭐하는거지? 룸서버에게 요청보내서 해
 
         try {
             JsonObject response = new JsonObject();

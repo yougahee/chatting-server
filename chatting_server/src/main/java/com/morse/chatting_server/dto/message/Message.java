@@ -1,4 +1,4 @@
-package com.morse.chatting_server.dto;
+package com.morse.chatting_server.dto.message;
 
 import lombok.Getter;
 import lombok.Setter;
