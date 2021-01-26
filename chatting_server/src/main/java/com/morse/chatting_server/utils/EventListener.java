@@ -1,15 +1,12 @@
+package com.morse.chatting_server.utils;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.messaging.SessionConnectedEvent;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import javax.websocket.Session;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,7 +22,7 @@ public class EventListener {
 	 *
 	 * @param event the event
 	 */
-/*	@EventListener
+/*	@com.morse.chatting_server.utils.EventListener
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
@@ -39,7 +36,7 @@ public class EventListener {
 	 *
 	 * @param event the event
 	 */
-	/*@EventListener
+	/*@com.morse.chatting_server.utils.EventListener
 	public void handleWebSocketDisConnectListener(SessionDisconnectEvent event) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 

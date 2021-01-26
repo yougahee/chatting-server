@@ -3,7 +3,7 @@ package com.morse.chatting_server.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.morse.chatting_server.dto.request.ChattingTextDTO;
+import com.morse.chatting_server.dto.request.ChattingData;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,13 +16,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
 @NoArgsConstructor
-public class ChattingHandler extends TextWebSocketHandler {
+public class ChattingHandlerService extends TextWebSocketHandler {
 
     private static HashMap<Long,WebSocketSession> sessions = new HashMap<>();
     private static final Gson gson = new GsonBuilder().create();
@@ -31,6 +29,8 @@ public class ChattingHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("[Handler::afterConnectionEstablished] New WebSocket connection, sessionId: {}", session.getId());
         log.info("Chatting WebSocket 연결 성공 and SessionId : " + session.getId());
+
+        //## sockjs를 쓰면 header에 넣을 수 있다.
 /*
         JsonObject response = new JsonObject();
         response.addProperty("id", "chatting_connected");
@@ -44,12 +44,10 @@ public class ChattingHandler extends TextWebSocketHandler {
             log.warn("[Handler::afterConnectionClosed] status: {}, sessionId: {}", status, session.getId());
             log.warn("Chatting WebSocket 비정상적 연결 끊김 and SessionId : " + session.getId());
         }
-        log.info("연결 끊긴 status : " + status.toString());
         log.info("Chatting WebSocket 정상적으로 연결 끊김 SessionId : " + session.getId());
         sessions.remove(session);
     }
 
-    // ## 에러 쏠 때만 필요
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
@@ -58,11 +56,8 @@ public class ChattingHandler extends TextWebSocketHandler {
         log.debug("Incoming message: {}", jsonMessage);
 
         switch (jsonMessage.get("id").getAsString()) {
-            case "start":
-                //start(session, jsonMessage);
-                break;
             case "roomIdx":
-                // ##redis로 바꾸던지 -> 직렬화문제?
+                // ##redis로 바꿀 수 -> 직렬화문제?
                 long roomIdx = Long.parseLong(jsonMessage.get("roomIdx").getAsString());
                 sessions.put(roomIdx, session);
                 log.info("Presenter로부터 room의 값을 가져옴 -> roomIdx : " + roomIdx);
@@ -73,11 +68,8 @@ public class ChattingHandler extends TextWebSocketHandler {
         }
     }
 
-    public void sendChatting(ChattingTextDTO chattingTextDTO, String nickname) {
-        log.info("roonIdx : " + chattingTextDTO.getRoomIdx());
+    public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String nickname) {
         WebSocketSession session = sessions.get(chattingTextDTO.getRoomIdx());
-
-        log.info("[send Chatting] session : " + session);
 
         try {
             JsonObject response = new JsonObject();
@@ -89,7 +81,6 @@ public class ChattingHandler extends TextWebSocketHandler {
             session.sendMessage(new TextMessage(response.toString()));
 
             log.info("[send Chatting] success : " + response.toString());
-
         } catch (Throwable t) {
             log.error("[send Chatting] error : " + t.getMessage());
             sendError(session, t.getMessage());

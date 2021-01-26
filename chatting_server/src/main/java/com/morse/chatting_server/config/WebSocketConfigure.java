@@ -1,6 +1,6 @@
 package com.morse.chatting_server.config;
 
-import com.morse.chatting_server.service.ChattingHandler;
+import com.morse.chatting_server.service.ChattingHandlerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @RequiredArgsConstructor
 public class WebSocketConfigure implements WebSocketConfigurer {
 
-    private final ChattingHandler chattingHandler;
+    private final ChattingHandlerService chattingHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
