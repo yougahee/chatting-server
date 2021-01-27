@@ -54,22 +54,24 @@
 
 ### 1. WebSocketSession을 저장해야한다.
 
-	1) 현재 코드 상에는 WebSocketSession을 저장하고 있는 상태이다.   
-	2) Global cache가 필요한 이유?
-		- 만약, 채팅 Server가 다운될 경우 WebSocketSession의 정보는 사라지게 된다.
-		- 그렇기 때문에, Redis에 WebSocketSession을 저장하던지, 다른 방법을 찾아보던지 해야한다.   
-	3) Client 단에서 WebSocket이 onClose 메소드를 통해 소켓 연결이 끊김을 알아차릴 수 있다. Presenter가 WebSocket에 재연결( 그 사이에 보낸 채팅은 HTTP 통신이 이뤄지지 않으니 Client측에서 채팅 전송에 실패했다는 메세지를 User에게 알려줘야 한다.)
+1) 현재 코드 상에는 WebSocketSession을 저장하고 있는 상태이다.   
+2) Global cache가 필요한 이유?
+	- 만약, 채팅 Server가 다운될 경우 WebSocketSession의 정보는 사라지게 된다.
+	- 그렇기 때문에, Redis에 WebSocketSession을 저장하던지, 다른 방법을 찾아보던지 해야한다.   
+3) Client 단에서 WebSocket이 onClose 메소드를 통해 소켓 연결이 끊김을 알아차릴 수 있다. Presenter가 WebSocket에 재연결( 그 사이에 보낸 채팅은 HTTP 통신이 이뤄지지 않으니 Client측에서 채팅 전송에 실패했다는 메세지를 User에게 알려줘야 한다.)
 
+</br>
+</br>
 
 ### 2. 재연결 관리
-	1) 채팅서버가 다운된 경우
-		채팅서버가 다운이 되었다는 말은 결국 모든 Presenter에 연결되어있는 WebSocket 연결도 모두 끊긴 상태일 것이다. (HTTP통신이 이루어지더라도 ) 
-		그러므로 굳이 Global Cache에 WebSocketSession을 저장해서 관리해야 할 필요성이 있을까?
+1) 채팅서버가 다운된 경우
+	- 채팅서버가 다운이 되었다는 말은 결국 모든 Presenter에 연결되어있는 WebSocket 연결도 모두 끊긴 상태일 것이다.(HTTP통신이 이루어지더라도 ) 그러므로 굳이 Global Cache에 WebSocketSession을 저장해서 관리해야 할 필요성이 있을까?
 
-	2) Presenter의 네트워크 상태가 좋지 않은 경우 ( WebSocket 끊김 )
-		 Presenter도 WebSocket의 onClose를 통해 연결이 끊김을 파악할 수 있다. 그것을 통해 미디어가(스트리밍 하고 있는 방이) 계속 살아있다면 채팅서버와 재연결 시도를 할 수 있다. 
+2) Presenter의 네트워크 상태가 좋지 않은 경우 ( WebSocket 끊김 )
+	- Presenter도 WebSocket의 onClose를 통해 연결이 끊김을 파악할 수 있다. 그것을 통해 미디어가(스트리밍 하고 있는 방이) 계속 살아있다면 채팅서버와 재연결 시도를 할 수 있다. 
 		
-	3)
+3) 사실 Presenter가 미디어를 계속해서 전송하고 있다고 했을 때, 채팅서버와 WebSocket연결이 끊어지는 것을 감지할 수 있다. 
+	- Presenter가 WebSocket과 연결이 계속 되어있는지 확인을 하고 재연결하기
 
 
 
