@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @Getter @Setter
-public class ChattingTextDTO {
-    private String sessionId;
+public class ChattingData {
+    private long roomIdx;
     private String textMessage;
 }

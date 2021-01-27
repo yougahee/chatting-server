@@ -23,7 +23,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4fb08bfb-b87a-41c7-83ee-e0d24388dbd6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/src/main/java/com/morse/chatting_server/dto/ChattingMessage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/src/main/java/com/morse/chatting_server/filter/RequestResponseFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/src/main/resources/static/js/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatting_server/src/test/java/com/morse/chatting_server/ChattingServerApplicationTests.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,9 +176,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="500" y="171" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611553100394" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1611550910988">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="2543" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1611707911905">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1611550910988" />
+    <state x="2543" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1611707911905" />
   </component>
 </project>
