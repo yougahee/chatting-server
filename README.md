@@ -73,7 +73,19 @@
 3) 사실 Presenter가 미디어를 계속해서 전송하고 있다고 했을 때, 채팅서버와 WebSocket연결이 끊어지는 것을 감지할 수 있다. 
 	- Presenter가 WebSocket과 연결이 계속 되어있는지 확인을 하고 재연결하기
 
+</br>
+</br>
 
+### 3. 채팅 로그
+1. 채팅 로그에 어떤 정보를 저장할 것인가?
+	- ㅇ
+	- ㅇ
+2. ㅇㅇ
+	- ㅇ
+	- ㅇ
+3. ㅇㅇ
+	- ㅇ
+	- ㅇ
 
 </br>
 </br>
@@ -112,4 +124,3 @@ dependencies {
 	implementation 'javax.servlet:jstl:1.2'
 }
 ```
-
