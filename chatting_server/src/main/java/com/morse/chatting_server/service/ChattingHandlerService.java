@@ -72,7 +72,7 @@ public class ChattingHandlerService extends TextWebSocketHandler {
         }
     }
 
-    public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String nickname) {
+    public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String userIdx, String email, String nickname) {
         //## Presenter가 보냈는데 session이 null일 수 가 있나?
         if(!sessionsHashMap.containsKey(chattingTextDTO.getRoomIdx()))
             throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
