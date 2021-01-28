@@ -1,10 +1,11 @@
-# :feet: Chatting Server
+# :email: Chatting Server
 
 </br>
 
 ## :pushpin: 사용 프레임워크 및 기술
 - Spring boot 
 - WebSocket
+- MongoDB
 
 </br>
 </br>
@@ -73,8 +74,33 @@
 3) 사실 Presenter가 미디어를 계속해서 전송하고 있다고 했을 때, 채팅서버와 WebSocket연결이 끊어지는 것을 감지할 수 있다. 
 	- Presenter가 WebSocket과 연결이 계속 되어있는지 확인을 하고 재연결하기
 
+</br>
+</br>
+
+### 3. 채팅 로그
+1. 채팅 로그에 어떤 정보를 저장할 것인가?
+	- user_idx, 닉네임, 채팅 메세지, 시간 
+	- ㅇ
+2. ㅇㅇ
+	- ㅇ
+	- ㅇ
+3. ㅇㅇ
+	- ㅇ
+	- ㅇ
+	
+### 4. 채팅로그를 저장할 때 몽고 DB를 사용하는 이유?
+1. NoSQL 특성을 가지고 있는 DB 중 몽고DB와 Redis를 고려해보았다. 
+2. Redis를 사용하지 않은 이유는 Redis는 인메모리 캐시이다. 그렇기 때문에 휘발성 메모리이다. 
+	- 채팅의 정보를 저장하는 것은 스트리밍 미디어가 동영상으로 저장되었을 때, 함께 보여주기 위함이므로 영구적으로 저장해야하기 때문에 Redis는 성격에 맞지 않는다.  
 
 
+</br>
+</br>
+
+### 5. 몽고 DB의 특징
+1. JSON형태의 document형식이다. 
+2. NoSQL
+3. Read/Write 시간이 빠르다. 
 </br>
 </br>
 </br>
@@ -112,4 +138,3 @@ dependencies {
 	implementation 'javax.servlet:jstl:1.2'
 }
 ```
-
