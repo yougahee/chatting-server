@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.morse.chatting_server.dto.request.ChattingData;
+import com.morse.chatting_server.enums.UserType;
+import com.morse.chatting_server.exception.DisconnectSessionException;
 import com.morse.chatting_server.exception.NotFoundException;
 import com.morse.chatting_server.exception.NotSendMessageException;
 import com.morse.chatting_server.utils.ResponseMessage;
@@ -74,8 +76,14 @@ public class ChattingHandlerService extends TextWebSocketHandler {
 
     public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String userIdx, String email, String nickname) {
         //## Presenter가 보냈는데 session이 null일 수 가 있나?
-        if(!sessionsHashMap.containsKey(chattingTextDTO.getRoomIdx()))
+        if(!sessionsHashMap.containsKey(chattingTextDTO.getRoomIdx())) {
+            if(chattingTextDTO.getUserType() == UserType.PRESENTER) {
+                //## 재연결 요청
+                throw new DisconnectSessionException(MESSAGE.REQUEST_RECONNECT_WEBSOCKET);
+            }
+
             throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
+        }
 
         WebSocketSession session = sessionsHashMap.get(chattingTextDTO.getRoomIdx());
 

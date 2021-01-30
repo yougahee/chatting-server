@@ -1,6 +1,7 @@
 package com.morse.chatting_server.utils;
 
 import com.morse.chatting_server.dto.message.ErrorMessage;
+import com.morse.chatting_server.exception.DisconnectSessionException;
 import com.morse.chatting_server.exception.NotFoundException;
 import com.morse.chatting_server.exception.NotSendMessageException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,4 +30,12 @@ public class ChattingControllerAdvice {
 				.body(new ErrorMessage(nsme.getMessage(), 400, req.getRequestURI()));
 	}
 
+	//## 재연결 요청 어떤 status code로 써야 맞는 걸까?
+	@ExceptionHandler(value = {DisconnectSessionException.class})
+	public ResponseEntity<ErrorMessage> disconnectSessionException(HttpServletRequest req, DisconnectSessionException dse) {
+		log.error(dse.getMessage(), dse);
+		return ResponseEntity
+				.accepted()
+				.body(new ErrorMessage(dse.getMessage(), 400, req.getRequestURI()));
+	}
 }
