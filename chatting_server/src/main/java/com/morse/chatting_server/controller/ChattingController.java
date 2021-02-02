@@ -22,7 +22,7 @@ public class ChattingController {
     }
 
     @PostMapping("/send/message")
-    public ResponseEntity<Void> sendMessage(@RequestHeader(value = "x-forward-userIdx") String userIdx,
+    public ResponseEntity<Void> sendMessage(@RequestHeader(value = "x-forward-useridx") String userIdx,
                                             @RequestHeader(value = "x-forward-email") String email,
                                             @RequestHeader(value = "x-forward-nickname") String nickname,
                                             @RequestBody ChattingData chattingData) {
