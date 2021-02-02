@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @Slf4j
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -25,11 +27,11 @@ public class ChattingController {
     public ResponseEntity<Void> sendMessage(@RequestHeader(value = "x-forward-useridx") String userIdx,
                                             @RequestHeader(value = "x-forward-email") String email,
                                             @RequestHeader(value = "x-forward-nickname") String nickname,
-                                            @RequestBody ChattingData chattingData) {
+                                            @RequestBody ChattingData chattingData) throws IOException {
         //socket 통신
         //## 채팅을 친 유저의 정보는 x-forward-email, x-forward-nickname으로 알 수 있음.
         log.info("[send Message] chattingData roomIdx : " + chattingData.getPresenterIdx() + "  " + chattingData.getTextMessage());
-        chattingHandler.sendToPresenterChattingMessage(chattingData, userIdx, email, nickname);
+        chattingHandler.sendToPresenterChattingMessage(chattingData, nickname);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
