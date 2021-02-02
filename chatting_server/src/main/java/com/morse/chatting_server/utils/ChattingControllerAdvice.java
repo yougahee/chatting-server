@@ -2,6 +2,7 @@ package com.morse.chatting_server.utils;
 
 import com.morse.chatting_server.dto.message.ErrorMessage;
 import com.morse.chatting_server.exception.DisconnectSessionException;
+import com.morse.chatting_server.exception.NoNegativeNumberException;
 import com.morse.chatting_server.exception.NotFoundException;
 import com.morse.chatting_server.exception.NotSendMessageException;
 import lombok.extern.slf4j.Slf4j;
@@ -37,5 +38,13 @@ public class ChattingControllerAdvice {
 		return ResponseEntity
 				.accepted()
 				.body(new ErrorMessage(dse.getMessage(), 400, req.getRequestURI()));
+	}
+
+	@ExceptionHandler(value = {NoNegativeNumberException.class})
+	public ResponseEntity<ErrorMessage> noNegativeNumberException(HttpServletRequest req, NoNegativeNumberException nne) {
+		log.error(nne.getMessage(), nne);
+		return ResponseEntity
+				.badRequest()
+				.body(new ErrorMessage(nne.getMessage(), 400, req.getRequestURI()));
 	}
 }
