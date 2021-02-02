@@ -4,14 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.morse.chatting_server.dto.request.ChattingData;
-import com.morse.chatting_server.enums.UserType;
 import com.morse.chatting_server.exception.NoNegativeNumberException;
 import com.morse.chatting_server.exception.NotFoundException;
 import com.morse.chatting_server.exception.NotSendMessageException;
 import com.morse.chatting_server.utils.JwtUtils;
 import com.morse.chatting_server.utils.ResponseMessage;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -19,7 +17,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -82,7 +79,7 @@ public class ChattingHandlerService extends TextWebSocketHandler {
                 //## true이면 presenter에게 재연결요청
 
 
-                //## 잠시 후에 다시 전송해주세요.. -> 이게 뭐여 ㅂㄷㅂㄷ
+                //## 잠시 후에 다시 전송해주세요..
                 //## 클라한테 다시 요청하는 것보다 세션 재연결 요청 후 다시 연결이 되는 지 감지되면 데이터 보내주기/..
                 //## 와우 넘 오바
 
