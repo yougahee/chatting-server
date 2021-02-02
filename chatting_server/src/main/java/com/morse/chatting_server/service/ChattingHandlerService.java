@@ -5,12 +5,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.morse.chatting_server.dto.request.ChattingData;
 import com.morse.chatting_server.enums.UserType;
-import com.morse.chatting_server.exception.DisconnectSessionException;
 import com.morse.chatting_server.exception.NoNegativeNumberException;
 import com.morse.chatting_server.exception.NotFoundException;
 import com.morse.chatting_server.exception.NotSendMessageException;
+import com.morse.chatting_server.utils.JwtUtils;
 import com.morse.chatting_server.utils.ResponseMessage;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,8 +31,11 @@ import java.util.HashMap;
 public class ChattingHandlerService extends TextWebSocketHandler {
 
     private static final Gson gson = new GsonBuilder().create();
-    private final ResponseMessage MESSAGE = new ResponseMessage();
     private static final HashMap<Long,WebSocketSession> sessionsHashMap = new HashMap<>();
+
+    private final ResponseMessage MESSAGE = new ResponseMessage();
+    private final JwtUtils jwtUtils = new JwtUtils();
+    private final LiveCheckService liveCheckService = new LiveCheckService();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -57,7 +62,8 @@ public class ChattingHandlerService extends TextWebSocketHandler {
         log.debug("Incoming message: {}", jsonMessage);
 
         switch (jsonMessage.get("id").getAsString()) {
-            case "roomIdx":
+            case "start":
+                makeChattingRoom(session, jsonMessage);
                 break;
             default:
                 sendError(session, "Invalid message with id " + jsonMessage.get("id").getAsString());
@@ -65,27 +71,30 @@ public class ChattingHandlerService extends TextWebSocketHandler {
         }
     }
 
-    public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String userIdx, String email, String nickname) {
-/*
-        //## Presenter가 보냈는데 session이 null일 수 가 있나?
-        if(!sessionsHashMap.containsKey(chattingTextDTO.getRoomIdx())) {
-            if(chattingTextDTO.getUserType() == UserType.PRESENTER) {
-                //## 재연결 요청
-                throw new DisconnectSessionException(MESSAGE.REQUEST_RECONNECT_WEBSOCKET);*/
+    public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String nickname) throws IOException {
+        long presenterIdx = chattingTextDTO.getPresenterIdx();
 
-        if(!sessionsHashMap.containsKey(chattingTextDTO.getRoomIdx())) {
-            if(chattingTextDTO.getUserType().equals(UserType.PRESENTER.getUserType())) {
-                //## 재연결 요청
-                throw new NotFoundException(MESSAGE.RECONNECT_SESSION);
+        if(!sessionsHashMap.containsKey(presenterIdx)) {
+
+            //## 통신을 통해 해당 presenter가 live하고 있는 지 확인.
+            // ## 테스트 해봐야 함
+            if(liveCheckService.checkLiveRoom(presenterIdx)){
+                //## true이면 presenter에게 재연결요청
+
+
+                //## 잠시 후에 다시 전송해주세요.. -> 이게 뭐여 ㅂㄷㅂㄷ
+                //## 클라한테 다시 요청하는 것보다 세션 재연결 요청 후 다시 연결이 되는 지 감지되면 데이터 보내주기/..
+                //## 와우 넘 오바
+
+                //## 일단, 세션 없다고 exception 보내줌
+                throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
+            } else {
+                //## 현재 방송 중이 아니라는 메세지를 보내 줌.
+                throw new NotFoundException(MESSAGE.NOT_LIVE_ROOM_SESSION);
             }
-
-            throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
         }
 
-        WebSocketSession session = sessionsHashMap.get(chattingTextDTO.getRoomIdx());
-
-        //## 실시간 스트리밍 되고 있는지 파악 ( Redis 접근 ) -> Presenter가 재연결을 할 수 있도록 해야 함.
-        //## 기본적으로 Presenter가 채팅서버와 연결이 끊긴다면 다 알려줘야 함
+        WebSocketSession session = sessionsHashMap.get(chattingTextDTO.getPresenterIdx());
 
         try {
             JsonObject response = new JsonObject();
@@ -94,8 +103,8 @@ public class ChattingHandlerService extends TextWebSocketHandler {
             response.addProperty("from", nickname);
             response.addProperty("message", chattingTextDTO.getTextMessage());
             response.addProperty("time", time);
-            session.sendMessage(new TextMessage(response.toString()));
 
+            session.sendMessage(new TextMessage(response.toString()));
             log.info("[send Chatting] success : " + response.toString());
         } catch (Throwable t) {
             log.error("[send Chatting] error : " + t.getMessage());
@@ -104,15 +113,15 @@ public class ChattingHandlerService extends TextWebSocketHandler {
     }
 
     private void makeChattingRoom(WebSocketSession session, JsonObject message) {
-        long roomIdx = message.get("roomIdx").getAsLong();
-        if (roomIdx < 0)  throw new NoNegativeNumberException(MESSAGE.NEGATIVE_ROOM_IDX_FAIL);
+        if(message.get("token").isJsonNull())
+            throw new NoNegativeNumberException(MESSAGE.ROOM_IDX_FAIL);
 
-        //## token을 처리하는 게 좋을까? token을 까서 현재 방송 중인 아이인지 파악하는 게 좋을까?
-        //## 속도면에서는 token 검사가 나을 것 같긴 한데,
+        String token = message.get("token").getAsString();
+        long presenterIdx = jwtUtils.isValidateToken(token);
+        if (presenterIdx <= 0) throw new NoNegativeNumberException(MESSAGE.NEGATIVE_ROOM_IDX_FAIL);
 
-
-        sessionsHashMap.put(roomIdx, session);
-        log.info("Presenter로부터 room의 값을 가져옴 -> roomIdx : " + roomIdx);
+        sessionsHashMap.put(presenterIdx, session);
+        log.info("presenterIdx : " + presenterIdx);
     }
 
     private void sendError(WebSocketSession session, String message) {

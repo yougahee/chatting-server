@@ -9,7 +9,8 @@ public class ResponseMessage {
 
 
     //세션
-    public String NOT_FOUND_SESSION = "세션이 존재하지 않습니다.";
+    public String NOT_FOUND_SESSION = "세션이 존재하지 않습니다. 재연결 중입니다.";
+    public String NOT_LIVE_ROOM_SESSION = "해당 스트리머는 현재 방송 중이지 않습니다.";
 
     // 전송실패
     public String SEND_CHATTING_FAIL = "채팅이 정상적으로 전송되지 않았습니다.";
@@ -18,5 +19,6 @@ public class ResponseMessage {
     public String RECONNECT_SESSION = "세션이 존재하지 않습니다. 재연결을 해주세요.";
 
     //roomIdx
+    public String ROOM_IDX_FAIL = "룸 idx값이 정상적으로 오지 않습니다.";
     public String NEGATIVE_ROOM_IDX_FAIL = "룸 IDX는 음수일 수 없습니다.";
 }

@@ -1,11 +1,10 @@
 package com.morse.chatting_server.utils;
 
 import com.morse.chatting_server.dto.message.ErrorMessage;
-import com.morse.chatting_server.exception.DisconnectSessionException;
-import com.morse.chatting_server.exception.NoNegativeNumberException;
-import com.morse.chatting_server.exception.NotFoundException;
-import com.morse.chatting_server.exception.NotSendMessageException;
+import com.morse.chatting_server.exception.*;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,5 +45,30 @@ public class ChattingControllerAdvice {
 		return ResponseEntity
 				.badRequest()
 				.body(new ErrorMessage(nne.getMessage(), 400, req.getRequestURI()));
+	}
+
+	//토큰 관련
+	@ExceptionHandler(value = {NotTokenException.class})
+	public ResponseEntity<ErrorMessage> notTokenException(HttpServletRequest req, NotTokenException nte) {
+		log.error(nte.getMessage(), nte);
+		return ResponseEntity
+				.badRequest()
+				.body(new ErrorMessage(nte.getMessage(), HttpStatus.UNAUTHORIZED.value(), req.getRequestURI()));
+	}
+
+	@ExceptionHandler(value = {SignatureVerificationException.class})
+	public ResponseEntity<ErrorMessage> signatureVerificationException(HttpServletRequest req, SignatureVerificationException sve) {
+		log.error(sve.getMessage(), sve);
+		return ResponseEntity
+				.badRequest()
+				.body(new ErrorMessage(sve.getMessage(), HttpStatus.UNAUTHORIZED.value(), req.getRequestURI()));
+	}
+
+	@ExceptionHandler(value = {JwtException.class})
+	public ResponseEntity<ErrorMessage> signatureVerificationException(HttpServletRequest req, JwtException je) {
+		log.error(je.getMessage(), je);
+		return ResponseEntity
+				.badRequest()
+				.body(new ErrorMessage(je.getMessage(), HttpStatus.UNAUTHORIZED.value(), req.getRequestURI()));
 	}
 }

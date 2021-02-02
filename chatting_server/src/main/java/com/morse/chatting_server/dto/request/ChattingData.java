@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter @Setter
 public class ChattingData {
-    private long roomIdx;
+    private long presenterIdx;
     // ## presenter, viewer
     private String userType;
     private String textMessage;
