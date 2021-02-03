@@ -12,11 +12,13 @@ import com.morse.chatting_server.exception.NotSendMessageException;
 import com.morse.chatting_server.utils.JwtUtils;
 import com.morse.chatting_server.utils.ResponseMessage;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

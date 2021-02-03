@@ -1,6 +1,8 @@
 package com.morse.chatting_server.utils;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.morse.chatting_server.exception.SignatureVerificationException;
@@ -21,19 +23,18 @@ public class JwtUtils {
 	private String ACCESS_SECRET_KEY;
 	private final String USER_IDX = "user_idx";
 
+	JWTVerifier jwtVerifier;
+
 	@PostConstruct
-	protected void init() {
-		ACCESS_SECRET_KEY = Base64.getEncoder().encodeToString(ACCESS_SECRET_KEY.getBytes());
+	private void init() {
+		jwtVerifier = JWT.require(Algorithm.HMAC256(ACCESS_SECRET_KEY)).build();
 	}
 
 	public long isValidateToken(String token) throws JwtException {
-		String key = ACCESS_SECRET_KEY;
+		log.info("jwt : " + token);
 
 		try {
-			Jwts.parser()
-					.setSigningKey(key)
-					.parseClaimsJws(token);
-
+			jwtVerifier.verify(token);
 			return JWT.decode(token).getClaim(USER_IDX).asLong();
 
 		} catch (TokenExpiredException te) {
