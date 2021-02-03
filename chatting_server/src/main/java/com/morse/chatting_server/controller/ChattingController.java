@@ -31,7 +31,7 @@ public class ChattingController {
         //socket 통신
         //## 채팅을 친 유저의 정보는 x-forward-email, x-forward-nickname으로 알 수 있음.
         log.info("[send Message] chattingData roomIdx : " + chattingData.getPresenterIdx() + "  " + chattingData.getTextMessage());
-        chattingHandler.sendToPresenterChattingMessage(chattingData, nickname);
+        chattingHandler.sendToPresenterChattingMessage(chattingData, userIdx, nickname);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
