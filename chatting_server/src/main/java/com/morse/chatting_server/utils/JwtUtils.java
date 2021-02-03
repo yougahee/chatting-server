@@ -31,7 +31,7 @@ public class JwtUtils {
     public long isValidateToken(String token) throws JwtException {
         log.info("validation 안에 들어온 token : " + token);
         try {
-            jwtVerifier.verify(token);
+            //jwtVerifier.verify(token);
             return JWT.decode(token).getClaim(USER_IDX).asLong();
         } catch (TokenExpiredException te) {
             log.error(te.getMessage());

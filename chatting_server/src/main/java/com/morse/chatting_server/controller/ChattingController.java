@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @CrossOrigin("*")
@@ -36,8 +38,8 @@ public class ChattingController {
                                             @RequestHeader(value = "x-forward-nickname") String nickname,
                                             @RequestBody ChattingData chattingData) throws IOException {
 
-        log.info("[send Message] chattingData presenterIdx : " + chattingData.getPresenterIdx() + " Message : " + chattingData.getTextMessage());
-
+        nickname = URLDecoder.decode(nickname, StandardCharsets.UTF_8);
+        log.info("[send Message] chattingData presenterIdx : " + chattingData.getPresenterIdx() + " nickname : " + nickname + " Message : " + chattingData.getTextMessage());
         chattingHandler.sendToPresenterChattingMessage(chattingData, userIdx, nickname);
 
         return ResponseEntity

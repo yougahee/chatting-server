@@ -87,6 +87,8 @@ public class ChattingHandlerService extends TextWebSocketHandler {
                 throw new NotFoundException(MESSAGE.PRESENTER_IDX_NOT_NULL);
         }
 
+        log.info("userType : " + chattingTextDTO.getUserType() + " presenterIdx : " + presenterIdx);
+
         if(!sessionsHashMap.containsKey(presenterIdx)) {
             if(liveCheckService.checkLiveRoom(presenterIdx)){
                 //##PRESENTER가 TRUE일때 재연결 요청.
@@ -99,6 +101,7 @@ public class ChattingHandlerService extends TextWebSocketHandler {
                 //## 일단, 세션 없다고 exception 보내줌
                 throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
             } else {
+                log.info("현재 방송 중이지 않음 ");
                 throw new NotFoundException(MESSAGE.NOT_LIVE_ROOM_SESSION);
             }
         }
@@ -114,6 +117,7 @@ public class ChattingHandlerService extends TextWebSocketHandler {
             response.addProperty("time", time);
 
             session.sendMessage(new TextMessage(response.toString()));
+            log.info("[send Chatting] nickname : " + nickname);
             log.info("[send Chatting] success : " + response.toString());
         } catch (Throwable t) {
             log.error("[send Chatting] error : " + t.getMessage());

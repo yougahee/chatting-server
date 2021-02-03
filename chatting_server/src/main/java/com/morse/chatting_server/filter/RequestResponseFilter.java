@@ -21,27 +21,34 @@ public class RequestResponseFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+
+        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(req);
+        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(res);
+
+        log.info("\n" +
+                        "[REQUEST] {}\n " +
+                        "url : {}\n" +
+                        "Request Headers : {}\n" +
+                        "Request Body : {} \n",
+                req.getMethod(),
+                req.getRequestURI(),
+                getHeaders(req),
+                getRequestBody(requestWrapper)
+        );
 
         long start = System.currentTimeMillis();
         chain.doFilter(requestWrapper, responseWrapper);
         long end = System.currentTimeMillis();
 
         log.info("\n" +
-                        "[REQUEST] {}\n " +
-                        "url : {}\n" +
                         "ResponseStatus : {}\n" +
                         "ResponseTime : {}\n" +
-                        "Headers : {}\n" +
-                        "Request : {}\n" +
-                        "Response : {}\n",
-                ((HttpServletRequest) request).getMethod(),
-                ((HttpServletRequest) request).getRequestURI(),
+                        "Response Body: {}\n",
                 responseWrapper.getStatus(),
                 (end - start) / 1000.0,
-                getHeaders((HttpServletRequest) request),
-                getRequestBody(requestWrapper),
                 getResponseBody(responseWrapper));
     }
 
@@ -54,7 +61,7 @@ public class RequestResponseFilter implements Filter {
             headerMap.put(headerName, request.getHeader(headerName));
         }
 
-        if(request.getHeaders("X-Forwarded-For") == null) {
+        if (request.getHeaders("X-Forwarded-For") == null) {
             headerMap.put("Client ip ", getClientIP(request));
         } else {
             headerMap.put("Client ip ", request.getHeaders("X-Forwarded-For").toString());
@@ -66,13 +73,13 @@ public class RequestResponseFilter implements Filter {
     private String getClientIP(HttpServletRequest request) {
         String ip = request.getHeader("Proxy-Client-IP");
 
-        if(ip == null)
+        if (ip == null)
             ip = request.getHeader("WL-Proxy-Client-IP");
-        if(ip == null)
+        if (ip == null)
             ip = request.getHeader("HTTP_CLIENT_IP");
-        if(ip == null)
+        if (ip == null)
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        if(ip == null)
+        if (ip == null)
             ip = request.getRemoteAddr();
 
         log.info(" >> ip >> " + ip);
