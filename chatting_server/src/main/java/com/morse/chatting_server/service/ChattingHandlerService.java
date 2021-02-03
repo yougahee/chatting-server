@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.morse.chatting_server.dto.request.ChattingData;
+import com.morse.chatting_server.enums.UserType;
+import com.morse.chatting_server.exception.DisconnectSessionException;
 import com.morse.chatting_server.exception.NoNegativeNumberException;
 import com.morse.chatting_server.exception.NotFoundException;
 import com.morse.chatting_server.exception.NotSendMessageException;
@@ -12,15 +14,14 @@ import com.morse.chatting_server.utils.ResponseMessage;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -62,31 +63,44 @@ public class ChattingHandlerService extends TextWebSocketHandler {
             case "start":
                 makeChattingRoom(session, jsonMessage);
                 break;
+            case "ping":
+                log.info("ping");
+                session.sendMessage(new PongMessage());
+                break;
             default:
                 sendError(session, "Invalid message with id " + jsonMessage.get("id").getAsString());
                 break;
         }
     }
 
-    public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String nickname) throws IOException {
+    @Override
+    protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
+        super.handlePongMessage(session, message);
+        log.info("pong message : " + message.toString());
+    }
+
+    public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String user_idx, String nickname) throws IOException {
         long presenterIdx = chattingTextDTO.getPresenterIdx();
 
+        if(presenterIdx <= 0) {
+            if(presenterIdx == 0 && chattingTextDTO.getUserType().equals(UserType.PRESENTER.getUserType()))
+                presenterIdx = Long.parseLong(user_idx);
+            else
+                throw new NotFoundException(MESSAGE.PRESENTER_IDX_NOT_NULL);
+        }
+
         if(!sessionsHashMap.containsKey(presenterIdx)) {
-
-            //## 통신을 통해 해당 presenter가 live하고 있는 지 확인.
-            // ## 테스트 해봐야 함
             if(liveCheckService.checkLiveRoom(presenterIdx)){
-                //## true이면 presenter에게 재연결요청
-
+                //##PRESENTER가 TRUE일때 재연결 요청.
+                if(chattingTextDTO.getUserType().equals(UserType.PRESENTER.getUserType()))
+                    throw new DisconnectSessionException(MESSAGE.RECONNECT_SESSION);
 
                 //## 잠시 후에 다시 전송해주세요..
-                //## 클라한테 다시 요청하는 것보다 세션 재연결 요청 후 다시 연결이 되는 지 감지되면 데이터 보내주기/..
-                //## 와우 넘 오바
+                //## 클라한테 다시 요청하는 것보다 세션 재연결 요청 후 다시 연결이 되는 지 감지되면 데이터 보내주기.
 
                 //## 일단, 세션 없다고 exception 보내줌
                 throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
             } else {
-                //## 현재 방송 중이 아니라는 메세지를 보내 줌.
                 throw new NotFoundException(MESSAGE.NOT_LIVE_ROOM_SESSION);
             }
         }
@@ -97,7 +111,7 @@ public class ChattingHandlerService extends TextWebSocketHandler {
             JsonObject response = new JsonObject();
             String time = new SimpleDateFormat("HH:mm").format(new Date());
             response.addProperty("id", "sendChatting");
-            response.addProperty("from", nickname);
+            response.addProperty("nickname", nickname);
             response.addProperty("message", chattingTextDTO.getTextMessage());
             response.addProperty("time", time);
 

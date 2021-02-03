@@ -6,6 +6,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -14,12 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @ControllerAdvice
 public class ChattingControllerAdvice {
+
+	//Bad Request
 	@ExceptionHandler(value = {NotFoundException.class})
 	public ResponseEntity<ErrorMessage> notFoundException(HttpServletRequest req, NotFoundException nfe) {
 		log.error(nfe.getMessage(), nfe);
 		return ResponseEntity
 				.badRequest()
-				.body(new ErrorMessage(nfe.getMessage(), 400, req.getRequestURI()));
+				.body(new ErrorMessage(nfe.getMessage(), HttpStatus.BAD_REQUEST.value(), req.getRequestURI()));
 	}
 
 	@ExceptionHandler(value = {NotSendMessageException.class})
@@ -27,7 +30,7 @@ public class ChattingControllerAdvice {
 		log.error(nsme.getMessage(), nsme);
 		return ResponseEntity
 				.badRequest()
-				.body(new ErrorMessage(nsme.getMessage(), 400, req.getRequestURI()));
+				.body(new ErrorMessage(nsme.getMessage(), HttpStatus.BAD_REQUEST.value(), req.getRequestURI()));
 	}
 
 	//## 재연결 요청 어떤 status code로 써야 맞는 걸까?
@@ -36,7 +39,7 @@ public class ChattingControllerAdvice {
 		log.error(dse.getMessage(), dse);
 		return ResponseEntity
 				.accepted()
-				.body(new ErrorMessage(dse.getMessage(), 400, req.getRequestURI()));
+				.body(new ErrorMessage(dse.getMessage(), HttpStatus.BAD_REQUEST.value(), req.getRequestURI()));
 	}
 
 	@ExceptionHandler(value = {NoNegativeNumberException.class})
@@ -44,10 +47,18 @@ public class ChattingControllerAdvice {
 		log.error(nne.getMessage(), nne);
 		return ResponseEntity
 				.badRequest()
-				.body(new ErrorMessage(nne.getMessage(), 400, req.getRequestURI()));
+				.body(new ErrorMessage(nne.getMessage(), HttpStatus.BAD_REQUEST.value(), req.getRequestURI()));
 	}
 
-	//토큰 관련
+	@ExceptionHandler(value = {MissingRequestHeaderException.class})
+	public ResponseEntity<ErrorMessage> missingRequestHeaderException(HttpServletRequest req, MissingRequestHeaderException mrhe) {
+		log.error(mrhe.getMessage(), mrhe);
+		return ResponseEntity
+				.badRequest()
+				.body(new ErrorMessage(mrhe.getMessage(), HttpStatus.BAD_REQUEST.value(), req.getRequestURI()));
+	}
+
+	//token error
 	@ExceptionHandler(value = {NotTokenException.class})
 	public ResponseEntity<ErrorMessage> notTokenException(HttpServletRequest req, NotTokenException nte) {
 		log.error(nte.getMessage(), nte);
@@ -71,4 +82,8 @@ public class ChattingControllerAdvice {
 				.badRequest()
 				.body(new ErrorMessage(je.getMessage(), HttpStatus.UNAUTHORIZED.value(), req.getRequestURI()));
 	}
+
+	//internal server error
+
+
 }

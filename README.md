@@ -32,7 +32,46 @@
 </br>
 </br>
 
-## :pushpin: Flow
+## :pushpin: 채팅의 전체적인 Flow
+### Presenter   
+
+1. Presenter가 방송을 킨 후 시그널링이 완료되면, Presenter는 채팅 서버에 WebSocket을 연결한다.   
+2. 연결이 정상적으로 이루어졌다면, Presenter는 WebSocket을 통해 token을 전달한다.    
+	- 이유 : token을 통해 PresenterIdx를 받아오기 위함   
+	- 확장성을 고려하여 roomIdx대신 PresenterIdx로 처리한다.    
+		- WebSocket의 token 정보를 header에 넣어서 사용할 것 이다.    
+		- Zuul2를 사용하여 API Gateway에서 WebSocket의 header에 token을 관리할 수 있게 해준다.     
+3. token이 예외를 던지지 않고(만료, 변조 등) 정상적으로 작동한다면 token안의 정보를 decode해서 userIdx(=presenterIdx)를 꺼내올 수 있다.
+4. presenterIdx와 WebSocketSession을 로컬에서 저장해준다. 
+이유
+Viewer 들이 presenterIdx만 알면 해당 WebSocketSession을 알 수 있고, WebSocket을 통해 데이터(채팅내용-json)을 Presenter에게 보낼 수 있다.
+
+<br>
+<br>
+
+### Viewer/Presenter의 채팅 보내기
+1. 모든 유저는 HTTP 통신을 통해 채팅을 보낼 수 있다. 
+2. HTTP Request Body에 TextMessage와 해당 룸의 PresenterIdx를 보낸다. 
+3. HTTP Request를 받은 채팅 서버는 (전달 받은) PresenterIdx가 스트리밍 중인지 확인한다.
+실제로 스트리밍 하고 있는 상태라면 4번으로 넘어간다.
+스트리밍을 하고 있지 않다면 "방송 종료되었습니다" 메세지와 함께 Exception처리
+4. 채팅 서버는 PresenterIdx에 해당하는 Presenter와 WebSocket이 연결되어 있는지 확인한다. 
+WebSocket연결이 유지된 상태라면 5번으로 넘어간다. 
+WebSocket연결이 되어 있지 않다면 재 연결 요청을 해야 한다. 
+5. 해당 WebSocketSession을 통해 채팅 서버는 HTTP로 받은 메세지를 Presenter에게 전달해준다.
+6. 메세지를 받은 Presenter는 DataChannel을 통해 메세지를 보내면 끝!
+
+
+<br>
+<br>
+
+
+### 재 연결 로직
+
+
+
+
+
 1. Presenter가 방송을 시작하면 시그널링 서버와 채팅서버에 각각 한 개씩 WebSocket을 연결시킨다.
 	- Viewer인 경우는 시그널링 서버에만 WebSocket을 연결하면 된다.
 	- Presenter와 채팅 서버 사이의 WebSocket은 채팅서버에 들어온 Message들을 Presenter에게 넘겨주는 역할을 하는 Socket

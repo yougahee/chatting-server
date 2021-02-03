@@ -4,12 +4,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class ResponseMessage {
-    //재연결
-    public String REQUEST_RECONNECT_WEBSOCKET = "WebSocket과 재연결을 해주세요";
-
 
     //세션
-    public String NOT_FOUND_SESSION = "세션이 존재하지 않습니다. 재연결 중입니다.";
+    public String NOT_FOUND_SESSION = "세션이 존재하지 않습니다. 재연결 중입니다. 잠시 후에 다시 보내주세요..";
     public String NOT_LIVE_ROOM_SESSION = "해당 스트리머는 현재 방송 중이지 않습니다.";
 
     // 전송실패
@@ -17,6 +14,9 @@ public class ResponseMessage {
 
     //재연결 요청
     public String RECONNECT_SESSION = "세션이 존재하지 않습니다. 재연결을 해주세요.";
+
+    //presenterIdx
+    public String PRESENTER_IDX_NOT_NULL = "PresenterIdx는 null값이 올 수 없습니다.";
 
     //roomIdx
     public String ROOM_IDX_FAIL = "룸 idx값이 정상적으로 오지 않습니다.";
