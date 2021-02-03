@@ -42,11 +42,13 @@ public class ChattingHandlerService extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(final WebSocketSession session, CloseStatus status) throws Exception {
-        if (!status.equalsCode(CloseStatus.NORMAL)) {
-            log.warn("[Handler::afterConnectionClosed] status: {}, sessionId: {}", status, session.getId());
-            log.warn("Chatting WebSocket 비정상적 연결 끊김 and SessionId : " + session.getId());
-        } else
+        if (status.equalsCode(CloseStatus.NORMAL)) {
             log.info("Chatting WebSocket 정상적으로 연결 끊김 SessionId : " + session.getId());
+        } else {
+            log.warn("[Handler::afterConnectionClosed] status: {}, sessionId: {}", status, session.getId());
+            log.info("Chatting WebSocket 비정상적 연결 끊김 and SessionId : " + session.getId());
+            log.error("closeState code : " + status.getCode() + "\n Close Reason : " + status.getReason());
+        }
 
         removeSession(session);
     }
