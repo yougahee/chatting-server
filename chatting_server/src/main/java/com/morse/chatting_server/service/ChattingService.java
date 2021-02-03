@@ -45,10 +45,10 @@ public class ChattingService {
 			session.close();
 			return;
 		}
-		
+
 		Long presenterIdx = jwtUtils.isValidateToken(token);
 		if (presenterIdx == null) {
-			sendError(session, MESSAGE.NEGATIVE_ROOM_IDX_FAIL);
+			sendError(session, MESSAGE.JWT_EXCEPTION);
 			session.close();
 			return;
 		}

@@ -1,9 +1,10 @@
-package com.morse.chatting_server.service;
+package com.morse.chatting_server.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.morse.chatting_server.model.WebSocketSessionHashMap;
+import com.morse.chatting_server.service.ChattingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

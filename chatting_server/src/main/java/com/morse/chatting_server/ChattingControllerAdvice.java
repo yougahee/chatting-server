@@ -1,4 +1,4 @@
-package com.morse.chatting_server.utils;
+package com.morse.chatting_server;
 
 import com.morse.chatting_server.dto.message.ErrorMessage;
 import com.morse.chatting_server.exception.*;

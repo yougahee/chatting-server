@@ -22,7 +22,7 @@ public class JwtUtils {
 	private final String USER_IDX = "user_idx";
 
 	JWTVerifier jwtVerifier;
-	ResponseMessage MESSAGE;
+	ResponseMessage MESSAGE = new ResponseMessage();
 
 	@PostConstruct
 	private void init() {
@@ -34,7 +34,6 @@ public class JwtUtils {
 		try {
 			jwtVerifier.verify(token);
 			return JWT.decode(token).getClaim(USER_IDX).asLong();
-
 		} catch (TokenExpiredException te) {
 			log.error(te.getMessage());
 			log.info(MESSAGE.EXPIRED_TOKEN);
@@ -55,3 +54,5 @@ public class JwtUtils {
 		return null;
 	}
 }
+
+

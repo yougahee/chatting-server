@@ -1,6 +1,6 @@
 package com.morse.chatting_server.config;
 
-import com.morse.chatting_server.service.WebSocketChattingHandler;
+import com.morse.chatting_server.handler.WebSocketChattingHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
