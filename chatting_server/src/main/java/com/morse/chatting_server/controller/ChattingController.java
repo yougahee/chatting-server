@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -31,7 +30,9 @@ public class ChattingController {
                                             @RequestBody ChattingData chattingData) throws IOException {
         //socket 통신
         //## 채팅을 친 유저의 정보는 x-forward-email, x-forward-nickname으로 알 수 있음.
+
         log.info("[send Message] chattingData presenterIdx : " + chattingData.getPresenterIdx() + " Message : " + chattingData.getTextMessage());
+
         chattingHandler.sendToPresenterChattingMessage(chattingData, userIdx, nickname);
 
         return ResponseEntity

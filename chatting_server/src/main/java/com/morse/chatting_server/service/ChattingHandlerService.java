@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -148,12 +147,12 @@ public class ChattingHandlerService extends TextWebSocketHandler {
         }
     }
 
-    private void removeSession(WebSocketSession session) {
-        for(Long key : sessionsHashMap.keySet()) {
-            if(sessionsHashMap.get(key).equals(session)) {
-                sessionsHashMap.remove(key);
-                break;
-            }
-        }
-    }
+	private void removeSession(WebSocketSession session) {
+		for (Long key : sessionsHashMap.keySet()) {
+			if (sessionsHashMap.get(key).equals(session)) {
+				sessionsHashMap.remove(key);
+				break;
+			}
+		}
+	}
 }

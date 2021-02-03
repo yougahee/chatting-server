@@ -11,6 +11,8 @@ public class ResponseMessage {
 
     // 전송실패
     public String SEND_CHATTING_FAIL = "채팅이 정상적으로 전송되지 않았습니다.";
+    public String TEXT_MESSAGE_NULL = "보내는 채팅은 null이 될 수 없습니다.";
+
 
     //재연결 요청
     public String RECONNECT_SESSION = "세션이 존재하지 않습니다. 재연결을 해주세요.";
