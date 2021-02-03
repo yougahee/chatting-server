@@ -31,7 +31,6 @@ public class JwtUtils {
 	}
 
 	public long isValidateToken(String token) throws JwtException {
-		log.info("jwt : " + token);
 
 		try {
 			jwtVerifier.verify(token);

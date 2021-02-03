@@ -1,7 +1,9 @@
 package com.morse.chatting_server.utils;
 
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @NoArgsConstructor
 public class ResponseMessage {
 

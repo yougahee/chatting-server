@@ -1,7 +1,7 @@
 package com.morse.chatting_server.controller;
 
 import com.morse.chatting_server.dto.request.ChattingData;
-import com.morse.chatting_server.service.ChattingHandlerService;
+import com.morse.chatting_server.service.ChattingService;
 import com.morse.chatting_server.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.io.IOException;
 @RestController
 public class ChattingController {
 
-    private final ChattingHandlerService chattingHandler;
+    private final ChattingService chattingService;
     private final JwtUtils jwtUtils;
 
     @GetMapping("/")
@@ -38,7 +38,7 @@ public class ChattingController {
 
         log.info("[send Message] chattingData presenterIdx : " + chattingData.getPresenterIdx() + " Message : " + chattingData.getTextMessage());
 
-        chattingHandler.sendToPresenterChattingMessage(chattingData, userIdx, nickname);
+        chattingService.sendToPresenterChattingMessage(chattingData, userIdx, nickname);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
