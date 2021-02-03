@@ -1,41 +1,41 @@
 package com.morse.chatting_server.utils;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.morse.chatting_server.exception.SignatureVerificationException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Base64;
 
 @Slf4j
 @Component
 public class JwtUtils {
 
 	@Value("${jwt.secret.at}")
-	private String ACCESS_SECRET_KEY;
+	private static String ACCESS_SECRET_KEY = "gagajwtAccessToken";
 	private final String USER_IDX = "user_idx";
+
+	JWTVerifier jwtVerifier;
 
 	@PostConstruct
 	protected void init() {
-		ACCESS_SECRET_KEY = Base64.getEncoder().encodeToString(ACCESS_SECRET_KEY.getBytes());
+		jwtVerifier = JWT.require(Algorithm.HMAC256(ACCESS_SECRET_KEY)).build();
 	}
 
 	public long isValidateToken(String token) throws JwtException {
-		String key = ACCESS_SECRET_KEY;
+		log.info("validation 안에 들어온 token : " + token);
 
-		try {
-			Jwts.parser()
-					.setSigningKey(key)
-					.parseClaimsJws(token);
+		return JWT.decode(token).getClaim(USER_IDX).asLong();
 
+		/*try {
+			jwtVerifier.verify(token);
 			return JWT.decode(token).getClaim(USER_IDX).asLong();
-
 		} catch (TokenExpiredException te) {
 			log.error(te.getMessage());
 			throw new TokenExpiredException("토큰이 만료되었습니다.");
@@ -48,6 +48,16 @@ public class JwtUtils {
 		} catch (JwtException e) {
 			log.error(e.getMessage());
 			throw new JwtException("Jwt Exception");
-		}
+		}*/
 	}
+/*
+	public static void main(String[] args) {
+		JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ACCESS_SECRET_KEY)).build();
+		String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtb21lMUBuYXZlci5jb20iLCJuaWNrbmFtZSI6IuuqqOuplDExMSIsInVzZXJfaWR4IjoyMywiZXhwIjoxNjEyMzIwMDAwLCJpYXQiOjE2MTIzMTY0MDB9.EMXRYM2n3-F_e6iS9dgtxiIjKGR188x1EKIOwXfDgLk";
+		System.out.println(ACCESS_SECRET_KEY);
+
+		jwtVerifier.verify(token);
+		System.out.println(JWT.decode(token).getClaim("user_idx").asLong());
+
+	}*/
 }

@@ -45,8 +45,8 @@ public class ChattingHandlerService extends TextWebSocketHandler {
         if (!status.equalsCode(CloseStatus.NORMAL)) {
             log.warn("[Handler::afterConnectionClosed] status: {}, sessionId: {}", status, session.getId());
             log.warn("Chatting WebSocket 비정상적 연결 끊김 and SessionId : " + session.getId());
-        }
-        log.info("Chatting WebSocket 정상적으로 연결 끊김 SessionId : " + session.getId());
+        } else
+            log.info("Chatting WebSocket 정상적으로 연결 끊김 SessionId : " + session.getId());
 
         removeSession(session);
     }
@@ -61,10 +61,6 @@ public class ChattingHandlerService extends TextWebSocketHandler {
         switch (jsonMessage.get("id").getAsString()) {
             case "start":
                 makeChattingRoom(session, jsonMessage);
-                break;
-            case "ping":
-                log.info("ping");
-                session.sendMessage(new PongMessage());
                 break;
             default:
                 sendError(session, "Invalid message with id " + jsonMessage.get("id").getAsString());
@@ -82,8 +78,9 @@ public class ChattingHandlerService extends TextWebSocketHandler {
         long presenterIdx = chattingTextDTO.getPresenterIdx();
 
         if(presenterIdx <= 0) {
-            if(presenterIdx == 0 && chattingTextDTO.getUserType().equals(UserType.PRESENTER.getUserType()))
+            if(presenterIdx == 0 && chattingTextDTO.getUserType().equals(UserType.PRESENTER.getUserType())) {
                 presenterIdx = Long.parseLong(user_idx);
+            }
             else
                 throw new NotFoundException(MESSAGE.PRESENTER_IDX_NOT_NULL);
         }
@@ -104,7 +101,7 @@ public class ChattingHandlerService extends TextWebSocketHandler {
             }
         }
 
-        WebSocketSession session = sessionsHashMap.get(chattingTextDTO.getPresenterIdx());
+        WebSocketSession session = sessionsHashMap.get(presenterIdx);
 
         try {
             JsonObject response = new JsonObject();
@@ -123,9 +120,6 @@ public class ChattingHandlerService extends TextWebSocketHandler {
     }
 
     private void makeChattingRoom(WebSocketSession session, JsonObject message) {
-        if(message.get("token").isJsonNull())
-            throw new NoNegativeNumberException(MESSAGE.ROOM_IDX_FAIL);
-
         String token = message.get("token").getAsString();
         long presenterIdx = jwtUtils.isValidateToken(token);
         if (presenterIdx <= 0) throw new NoNegativeNumberException(MESSAGE.NEGATIVE_ROOM_IDX_FAIL);
