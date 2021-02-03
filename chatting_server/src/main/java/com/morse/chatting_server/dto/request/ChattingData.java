@@ -9,8 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter @Setter
 public class ChattingData {
-    private long presenterIdx;
-    // ## presenter, viewer
+    private Long presenterIdx;
     private String userType;
     private String textMessage;
 }

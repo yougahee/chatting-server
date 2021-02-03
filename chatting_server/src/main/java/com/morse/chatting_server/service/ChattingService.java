@@ -4,9 +4,7 @@ import com.google.gson.JsonObject;
 import com.morse.chatting_server.dto.request.ChattingData;
 import com.morse.chatting_server.enums.UserType;
 import com.morse.chatting_server.exception.DisconnectSessionException;
-import com.morse.chatting_server.exception.NoNegativeNumberException;
 import com.morse.chatting_server.exception.NotFoundException;
-import com.morse.chatting_server.exception.NotSendMessageException;
 import com.morse.chatting_server.model.WebSocketSessionHashMap;
 import com.morse.chatting_server.utils.JwtUtils;
 import com.morse.chatting_server.utils.ResponseMessage;
@@ -29,40 +27,59 @@ public class ChattingService {
 	private final JwtUtils jwtUtils;
 	private final LiveCheckService liveCheckService;
 
-	public void makeChattingRoom(WebSocketSession session, JsonObject message) {
-		if(message.get("token").isJsonNull())
-			throw new NoNegativeNumberException(MESSAGE.ROOM_IDX_FAIL);
+	public void makeChattingRoom(WebSocketSession session, JsonObject message) throws IOException{
+		String token;
 
-		String token = message.get("token").getAsString();
-		long presenterIdx = jwtUtils.isValidateToken(token);
-		if (presenterIdx <= 0) throw new NoNegativeNumberException(MESSAGE.NEGATIVE_ROOM_IDX_FAIL);
+		try {
+			token = message.get("token").getAsString();
+		} catch (NullPointerException ne) {
+			log.error(ne.getMessage());
+			sendError(session, MESSAGE.ROOM_IDX_FAIL);
+			session.close();
+			return;
+		}
+
+		if(token == null || token.equals("")) {
+			log.error("token is null");
+			sendError(session, MESSAGE.TOKEN_NULL);
+			session.close();
+			return;
+		}
+		
+		Long presenterIdx = jwtUtils.isValidateToken(token);
+		if (presenterIdx == null) {
+			sendError(session, MESSAGE.NEGATIVE_ROOM_IDX_FAIL);
+			session.close();
+			return;
+		}
 
 		log.info("presenterIdx : " + presenterIdx);
 		WebSocketSessionHashMap.insertSession(presenterIdx, session);
-		//sessionsHashMap.put(presenterIdx, session);
 	}
 
 	public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String user_idx, String nickname) throws IOException {
-		long presenterIdx = chattingTextDTO.getPresenterIdx();
+		Long presenterIdx = chattingTextDTO.getPresenterIdx();
+		String userType = chattingTextDTO.getUserType();
 
-		if(presenterIdx <= 0) {
-			if(presenterIdx == 0 && chattingTextDTO.getUserType().equals(UserType.PRESENTER.getUserType()))
+		if(presenterIdx == null) {
+			if(userType.equals(UserType.PRESENTER.getUserType()))
 				presenterIdx = Long.parseLong(user_idx);
 			else
 				throw new NotFoundException(MESSAGE.PRESENTER_IDX_NOT_NULL);
 		}
 
-		//## 실제로 배포할 때는 LiveRoom에 직접요청 후 실제로 돌아가는 지 확인한 후
+		//## 실제로 배포할 때는 IF문 안에 들어있는 두개 자리 바꾸기
 		if(!WebSocketSessionHashMap.isSessionExist(presenterIdx)) {
 			if(liveCheckService.checkLiveRoom(presenterIdx)){
-				//##PRESENTER가 TRUE일때 재연결 요청.
-				if(chattingTextDTO.getUserType().equals(UserType.PRESENTER.getUserType()))
+				if(userType.equals(UserType.PRESENTER.getUserType()))
 					throw new DisconnectSessionException(MESSAGE.RECONNECT_SESSION);
 
 				//## 잠시 후에 다시 전송해주세요..
 				//## 클라한테 다시 요청하는 것보다 세션 재연결 요청 후 다시 연결이 되는 지 감지되면 데이터 보내주기.
+				// 시그널링 서버에 재연결 로직
+				//liveCheckService.reconnectRequest(presenterIdx);
 
-				//## 일단, 세션 없다고 exception 보내줌
+				//일단, 세션 없다고 exception 보내줌
 				throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
 			} else {
 				throw new NotFoundException(MESSAGE.NOT_LIVE_ROOM_SESSION);

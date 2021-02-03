@@ -25,4 +25,11 @@ public class ResponseMessage {
     //roomIdx
     public String ROOM_IDX_FAIL = "룸 idx값이 정상적으로 오지 않습니다.";
     public String NEGATIVE_ROOM_IDX_FAIL = "룸 IDX는 음수일 수 없습니다.";
+
+    //token
+    public String TOKEN_NULL = "Token null";
+    public String EXPIRED_TOKEN = "토큰이 만료되었습니다.";
+    public String MODULATE_TOKEN = "토큰이 변조되었습니다.";
+    public String NOT_TOKEN_TYPE = "토큰의 유형이 아닙니다.";
+    public String JWT_EXCEPTION = "Jwt Exception";
 }
