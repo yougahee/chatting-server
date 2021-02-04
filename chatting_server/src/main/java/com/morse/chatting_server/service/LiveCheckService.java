@@ -34,7 +34,7 @@ public class LiveCheckService {
 
 		HttpResponse response = client.execute(httpPost);
 
-		if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 			String responseJson = EntityUtils.toString(response.getEntity());
 			jsonObject = gson.fromJson(responseJson, JsonObject.class);
 
@@ -54,7 +54,7 @@ public class LiveCheckService {
 
 		HttpResponse response = client.execute(httpPost);
 
-		if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 			String responseJson = EntityUtils.toString(response.getEntity());
 			jsonObject = gson.fromJson(responseJson, JsonObject.class);
 

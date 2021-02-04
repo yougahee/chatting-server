@@ -9,11 +9,11 @@ import java.util.HashMap;
 public final class WebSocketSessionHashMap {
 	private static final HashMap<Long, WebSocketSession> sessionsHashMap = new HashMap<>();
 
-	public static synchronized void insertSession(Long presenterIdx, WebSocketSession session) {
+	public static void insertSession(Long presenterIdx, WebSocketSession session) {
 		sessionsHashMap.put(presenterIdx, session);
 	}
 
-	public static synchronized void removeSession(WebSocketSession session) {
+	public static void removeSession(WebSocketSession session) {
 		for (Long key : sessionsHashMap.keySet()) {
 			if (sessionsHashMap.get(key).equals(session)) {
 				sessionsHashMap.remove(key);
@@ -22,11 +22,11 @@ public final class WebSocketSessionHashMap {
 		}
 	}
 
-	public static synchronized WebSocketSession getWebSocketSession(Long presenterIdx) {
+	public static WebSocketSession getWebSocketSession(Long presenterIdx) {
 		return sessionsHashMap.get(presenterIdx);
 	}
 
-	public static synchronized boolean isSessionExist(Long presenterIdx) {
+	public static boolean isSessionExist(Long presenterIdx) {
 		return sessionsHashMap.containsKey(presenterIdx);
 	}
 }

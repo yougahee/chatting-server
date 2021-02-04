@@ -27,7 +27,7 @@ public class ChattingService {
 	private final JwtUtils jwtUtils;
 	private final LiveCheckService liveCheckService;
 
-	public void makeChattingRoom(WebSocketSession session, JsonObject message) throws IOException{
+	public void makeChattingRoom(WebSocketSession session, JsonObject message) throws IOException {
 		String token;
 
 		try {
@@ -39,7 +39,7 @@ public class ChattingService {
 			return;
 		}
 
-		if(token == null || token.equals("")) {
+		if (token == null || token.equals("")) {
 			log.error("token is null");
 			sendError(session, MESSAGE.TOKEN_NULL);
 			session.close();
@@ -48,7 +48,7 @@ public class ChattingService {
 
 		Long presenterIdx = jwtUtils.isValidateToken(token);
 		if (presenterIdx == null) {
-			sendError(session, MESSAGE.JWT_EXCEPTION);
+			sendErrorCustom(session, "tokenException", MESSAGE.JWT_EXCEPTION);
 			session.close();
 			return;
 		}
@@ -61,17 +61,17 @@ public class ChattingService {
 		Long presenterIdx = chattingTextDTO.getPresenterIdx();
 		String userType = chattingTextDTO.getUserType();
 
-		if(presenterIdx == null) {
-			if(userType.equals(UserType.PRESENTER.getUserType()))
+		if (presenterIdx == null) {
+			if (userType.equals(UserType.PRESENTER.getUserType()))
 				presenterIdx = Long.parseLong(user_idx);
 			else
 				throw new NotFoundException(MESSAGE.PRESENTER_IDX_NOT_NULL);
 		}
 
 		//## 실제로 배포할 때는 IF문 안에 들어있는 두개 자리 바꾸기
-		if(!WebSocketSessionHashMap.isSessionExist(presenterIdx)) {
-			if(liveCheckService.checkLiveRoom(presenterIdx)){
-				if(userType.equals(UserType.PRESENTER.getUserType()))
+		if (!WebSocketSessionHashMap.isSessionExist(presenterIdx)) {
+			if (liveCheckService.checkLiveRoom(presenterIdx)) {
+				if (userType.equals(UserType.PRESENTER.getUserType()))
 					throw new DisconnectSessionException(MESSAGE.RECONNECT_SESSION);
 
 				//## 잠시 후에 다시 전송해주세요..
@@ -108,6 +108,18 @@ public class ChattingService {
 		try {
 			JsonObject response = new JsonObject();
 			response.addProperty("id", "error");
+			response.addProperty("message", message);
+			session.sendMessage(new TextMessage(response.toString()));
+		} catch (IOException e) {
+			log.error("Exception sending message", e);
+		}
+	}
+
+	public void sendErrorCustom(WebSocketSession session, String id, String message) {
+		try {
+			JsonObject response = new JsonObject();
+			response.addProperty("id", id);
+			response.addProperty("response", "reject");
 			response.addProperty("message", message);
 			session.sendMessage(new TextMessage(response.toString()));
 		} catch (IOException e) {
