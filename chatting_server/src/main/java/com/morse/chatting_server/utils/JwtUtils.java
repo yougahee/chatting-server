@@ -29,7 +29,7 @@ public class JwtUtils {
 		jwtVerifier = JWT.require(Algorithm.HMAC256(ACCESS_SECRET_KEY)).build();
 	}
 
-	public Long isValidateToken(String token) throws JwtException {
+	public Long isValidateToken(String token) {
 
 		try {
 			jwtVerifier.verify(token);
@@ -37,19 +37,15 @@ public class JwtUtils {
 		} catch (TokenExpiredException te) {
 			log.error(te.getMessage());
 			log.info(MESSAGE.EXPIRED_TOKEN);
-			//throw new TokenExpiredException("토큰이 만료되었습니다.");
 		} catch (SignatureVerificationException sve) {
 			log.error(sve.getMessage());
 			log.info(MESSAGE.MODULATE_TOKEN);
-			//throw new SignatureVerificationException("토큰이 변조되었습니다.");
 		} catch (JWTDecodeException jde) {
 			log.error(jde.getMessage());
 			log.info(MESSAGE.NOT_TOKEN_TYPE);
-			//throw new JWTDecodeException("토큰의 유형이 아닙니다.");
 		} catch (JwtException e) {
 			log.error(e.getMessage());
 			log.info(MESSAGE.JWT_EXCEPTION);
-			//throw new JwtException("Jwt Exception");
 		}
 		return null;
 	}

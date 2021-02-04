@@ -21,9 +21,9 @@ public class LiveCheckService {
 
 	private static final Gson gson = new GsonBuilder().create();
 
-	private String ROOM_BASE_URL = "http://downsups.onstove.com:8003/room/live";
+	private static final String ROOM_BASE_URL = "http://downsups.onstove.com:8003/room/live";
 	private JsonObject jsonObject = new JsonObject();
-	private HttpClient client = HttpClientBuilder.create().build();
+	private final HttpClient client = HttpClientBuilder.create().build();
 
 	public boolean checkLiveRoom(Long presenterIdx) throws IOException {
 		HttpPost httpPost = new HttpPost(ROOM_BASE_URL + "/check");
@@ -38,6 +38,7 @@ public class LiveCheckService {
 			String responseJson = EntityUtils.toString(response.getEntity());
 			jsonObject = gson.fromJson(responseJson, JsonObject.class);
 
+			// ## 여기서 roomIdx도 받아와서 WebSocketSession static 에 넣어서 관리
 			return jsonObject.get("data").getAsJsonObject().get("alive").getAsBoolean();
 		}
 		return false;

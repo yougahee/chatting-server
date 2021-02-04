@@ -82,8 +82,4 @@ public class ChattingControllerAdvice {
 				.badRequest()
 				.body(new ErrorMessage(je.getMessage(), HttpStatus.UNAUTHORIZED.value(), req.getRequestURI()));
 	}
-
-	//internal server error
-
-
 }

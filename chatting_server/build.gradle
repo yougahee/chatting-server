@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.4.1'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
+	id "org.sonarqube" version '2.7'
 }
 
 group = 'com.morse'
@@ -63,6 +64,21 @@ dependencies {
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+sonarqube {
+	properties {
+		property "sonar.host.url", "http://localhost:9000/"
+		property "sonar.login", "admin"
+		property "sonar.password", "admin"
+		property "sonar.projectKey", "morse-chatting-server"
+		property "sonar.projectName", "morse-chatting-server"
+		property "sonar.projectVersion", "1.0"
+		property "sonar.sourceEncoding", "UTF-8"
+		property "sonar.sources", "src/main/java"
+		property "sonar.profile", "Sonar way"
+	}
+}
+
 
 test {
 	useJUnitPlatform()

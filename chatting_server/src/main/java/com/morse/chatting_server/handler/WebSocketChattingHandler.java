@@ -38,6 +38,11 @@ public class WebSocketChattingHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        if(message.toString().equals("ping")) {
+            session.sendMessage(new TextMessage("pong"));
+            return;
+        }
+
         JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
 
         log.info("Incoming message: {}", jsonMessage);
