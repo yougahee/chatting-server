@@ -14,9 +14,9 @@ public final class WebSocketSessionHashMap {
 	}
 
 	public static void removeSession(WebSocketSession session) {
-		for (Long key : sessionsHashMap.keySet()) {
-			if (sessionsHashMap.get(key).equals(session)) {
-				sessionsHashMap.remove(key);
+		for (HashMap.Entry<Long, WebSocketSession> entry : sessionsHashMap.entrySet()) {
+			if (entry.getValue().equals(session)) {
+				sessionsHashMap.remove(entry.getKey());
 				break;
 			}
 		}

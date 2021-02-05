@@ -1,3 +1,4 @@
+/*
 
 
 var ws = new WebSocket('wss://' + location.host + '/chat');
@@ -88,4 +89,4 @@ function disconnect() {
                 p.appendChild(document.createTextNode(messageOutput.from + ": "
                   + messageOutput.text + " (" + messageOutput.time + ")"));
                 response.appendChild(p);
-            }
+            }*/

@@ -38,7 +38,7 @@ public class WebSocketChattingHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        if(message.toString().equals("ping")) {
+        if(message.getPayload().equals("ping")) {
             session.sendMessage(new TextMessage("pong"));
             return;
         }
