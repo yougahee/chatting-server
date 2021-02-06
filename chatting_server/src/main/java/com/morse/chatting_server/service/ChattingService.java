@@ -100,7 +100,7 @@ public class ChattingService {
 			response.addProperty("time", time);
 
 			session.sendMessage(new TextMessage(response.toString()));
-			chattingLogRepository.save(new ChattingLog(Integer.toUnsignedLong(0), presenterIdx, Long.parseLong(userIdx), nickname, chattingTextDTO.getTextMessage()));
+			//chattingLogRepository.save(new ChattingLog(Integer.toUnsignedLong(0), presenterIdx, Long.parseLong(userIdx), nickname, chattingTextDTO.getTextMessage()));
 			log.info("[send Chatting] success : " + response.toString());
 		} catch (Throwable t) {
 			log.error("[send Chatting] error : " + t.getMessage());
