@@ -1,7 +1,6 @@
 package com.morse.chatting_server.model;
 
 import org.springframework.web.socket.WebSocketSession;
-
 import java.util.HashMap;
 
 public final class WebSocketSessionHashMap {

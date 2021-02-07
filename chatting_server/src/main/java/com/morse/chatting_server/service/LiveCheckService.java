@@ -38,15 +38,12 @@ public class LiveCheckService {
 			String responseJson = EntityUtils.toString(response.getEntity());
 			jsonObject = gson.fromJson(responseJson, JsonObject.class);
 
-			// ## 여기서 roomIdx도 받아와서 WebSocketSession static 에 넣어서 관리
 			return jsonObject.get("data").getAsJsonObject().get("alive").getAsBoolean();
 		}
 		return false;
 	}
 
-	//## 시그널링 서버에게 reconnect 요청
 	public void reconnectRequest(Long presenterIdx) throws IOException {
-		//## uri 바꿔야 함
 		HttpPost httpPost = new HttpPost(ROOM_BASE_URL + "/check");
 
 		jsonObject.addProperty("presenterIdx", presenterIdx.toString());
@@ -58,11 +55,7 @@ public class LiveCheckService {
 		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 			String responseJson = EntityUtils.toString(response.getEntity());
 			jsonObject = gson.fromJson(responseJson, JsonObject.class);
-
-			//## 이것도 수정
 			jsonObject.get("data").getAsJsonObject().get("alive").getAsBoolean();
-		} else {
-			// ## exception 처리
 		}
 	}
 }

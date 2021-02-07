@@ -1,12 +1,10 @@
 package com.morse.chatting_server.model;
 
+import com.morse.chatting_server.utils.TimestampUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Document(collection = "chatting_log")
 @Setter @Getter
@@ -22,7 +20,7 @@ public class ChattingLog {
 	private String sendTime;
 
 	public ChattingLog() {
-		this.sendTime = convertNow();
+		this.sendTime = TimestampUtils.getNow();
 	}
 
 	public ChattingLog(Long roomIdx, Long presenterIdx, Long userIdx, String nickname, String sendMessage) {
@@ -31,7 +29,7 @@ public class ChattingLog {
 		this.userIdx = userIdx;
 		this.nickname = nickname;
 		this.sendMessage = sendMessage;
-		this.sendTime = convertNow();
+		this.sendTime = TimestampUtils.getNow();
 	}
 
 	@Override
@@ -40,9 +38,4 @@ public class ChattingLog {
 				"ChattingLog[presenter_idx=%s, user_idx=%s, nickname='%s', send_message='%s', send_time='%s']",
 				presenterIdx, userIdx, nickname, sendMessage, sendTime);
 	}
-
-	public String convertNow() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-	}
-
 }
