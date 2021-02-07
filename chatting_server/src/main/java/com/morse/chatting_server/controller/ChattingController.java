@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @CrossOrigin("*")
@@ -40,7 +38,6 @@ public class ChattingController {
 
         log.info("[send Message] chattingData presenterIdx : " + chattingData.getPresenterIdx() + " nickname : " + nickname + " Message : " + chattingData.getTextMessage());
         chattingService.sendToPresenterChattingMessage(chattingData, userIdx, nickname);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();

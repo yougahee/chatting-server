@@ -7,6 +7,10 @@ public class ResponseMessage {
 
     private ResponseMessage() {}
 
+    //성공/실패
+    public static final String SUCCESS = "Success";
+    public static final String FAIL = "Fail";
+
     //세션
     public static final String NOT_FOUND_SESSION = "세션이 존재하지 않습니다. 재연결 중입니다. 잠시 후에 다시 보내주세요..";
     public static final String NOT_LIVE_ROOM_SESSION = "해당 스트리머는 현재 방송 중이지 않습니다.";

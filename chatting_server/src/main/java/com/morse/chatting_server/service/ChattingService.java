@@ -43,27 +43,15 @@ public class ChattingService {
 			return;
 		}
 
-		if (token == null || token.equals("")) {
-			log.error("token is null");
-			sendError(session, ResponseMessage.TOKEN_NULL);
-			session.close();
-			return;
-		}
-
 		Long presenterIdx = jwtUtils.isValidateToken(token);
-		if (presenterIdx == null) {
-			sendErrorCustom(session, "tokenException", ResponseMessage.JWT_EXCEPTION);
-			session.close();
-			return;
-		}
-
-		log.info("presenterIdx : " + presenterIdx);
+		isPresenterIdxNull(presenterIdx, session);
 		WebSocketSessionHashMap.insertSession(presenterIdx, session);
 	}
 
 	public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String userIdx, String nickname) throws IOException {
 		Long presenterIdx = chattingTextDTO.getPresenterIdx();
 		String userType = chattingTextDTO.getUserType();
+		nickname = URLDecoder.decode(nickname, StandardCharsets.UTF_8);
 
 		if (presenterIdx == null) {
 			if (userType.equals(UserType.PRESENTER.getUserType()))
@@ -72,39 +60,46 @@ public class ChattingService {
 				throw new NotFoundException(ResponseMessage.PRESENTER_IDX_NOT_NULL);
 		}
 
-		if (!WebSocketSessionHashMap.isSessionExist(presenterIdx)) {
-			if (liveCheckService.checkLiveRoom(presenterIdx)) {
-				if (userType.equals(UserType.PRESENTER.getUserType()))
-					throw new DisconnectSessionException(ResponseMessage.RECONNECT_SESSION);
-
-				//## 잠시 후에 다시 전송해주세요..
-				//## 클라한테 다시 요청하는 것보다 세션 재연결 요청 후 다시 연결이 되는 지 감지되면 데이터 보내주기.
-				// 시그널링 서버에 재연결 로직
-				//liveCheckService.reconnectRequest(presenterIdx);
-
-				//일단, 세션 없다고 exception 보내줌
-				throw new NotFoundException(ResponseMessage.NOT_FOUND_SESSION);
-			} else {
-				throw new NotFoundException(ResponseMessage.NOT_LIVE_ROOM_SESSION);
-			}
-		}
-
+		existSession(presenterIdx, userType);
 		WebSocketSession session = WebSocketSessionHashMap.getWebSocketSession(presenterIdx);
+		sendMessageToPresenter(session, nickname, chattingTextDTO.getTextMessage());
+		chattingLogRepository.save(new ChattingLog(Integer.toUnsignedLong(0), presenterIdx, Long.parseLong(userIdx), nickname, chattingTextDTO.getTextMessage()));
+	}
 
+	public void sendMessageToPresenter(WebSocketSession session, String nickname, String message) {
 		try {
 			JsonObject response = new JsonObject();
 			String time = new SimpleDateFormat("HH:mm").format(new Date());
 			response.addProperty("id", "sendChatting");
-			response.addProperty("nickname", URLDecoder.decode(nickname, StandardCharsets.UTF_8));
-			response.addProperty("message", chattingTextDTO.getTextMessage());
+			response.addProperty("nickname", nickname);
+			response.addProperty("message", message);
 			response.addProperty("time", time);
 
 			session.sendMessage(new TextMessage(response.toString()));
-			//chattingLogRepository.save(new ChattingLog(Integer.toUnsignedLong(0), presenterIdx, Long.parseLong(userIdx), nickname, chattingTextDTO.getTextMessage()));
 			log.info("[send Chatting] success : " + response.toString());
 		} catch (Throwable t) {
 			log.error("[send Chatting] error : " + t.getMessage());
 			sendError(session, t.getMessage());
+		}
+	}
+
+	public void existSession(Long presenterIdx, String userType) throws IOException {
+		if (!WebSocketSessionHashMap.isSessionExist(presenterIdx)) {
+			if (liveCheckService.checkLiveRoom(presenterIdx)) {
+				if (userType.equals(UserType.PRESENTER.getUserType()))
+					throw new DisconnectSessionException(ResponseMessage.RECONNECT_SESSION);
+				else
+					throw new NotFoundException(ResponseMessage.NOT_FOUND_SESSION);
+			} else {
+				throw new NotFoundException(ResponseMessage.NOT_LIVE_ROOM_SESSION);
+			}
+		}
+	}
+
+	public void isPresenterIdxNull(Long presenterIdx, WebSocketSession session) throws IOException {
+		if (presenterIdx == null) {
+			sendErrorCustom(session, "tokenException", ResponseMessage.JWT_EXCEPTION);
+			session.close();
 		}
 	}
 
