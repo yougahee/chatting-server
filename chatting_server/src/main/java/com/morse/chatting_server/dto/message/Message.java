@@ -1,5 +1,6 @@
 package com.morse.chatting_server.dto.message;
 
+import com.morse.chatting_server.utils.TimestampUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,29 +16,23 @@ public class Message {
     private static final String DEFAULT_KEY = "result";
 
     public Message() {
-        this.timestamp = convertDateFormat(LocalDateTime.now());
+        this.timestamp = TimestampUtils.getNow();
     }
 
     public Message(String message) {
-        this.timestamp = convertDateFormat(LocalDateTime.now());
+        this.timestamp = TimestampUtils.getNow();
         this.message = message;
     }
 
     public Message(Object result) {
-        this.timestamp = convertDateFormat(LocalDateTime.now());
+        this.timestamp = TimestampUtils.getNow();
         this.message = "success";
         this.data = result;
     }
 
     public Message(Object result, String message) {
-        this.timestamp = convertDateFormat(LocalDateTime.now());
+        this.timestamp = TimestampUtils.getNow();
         this.message = message;
         this.data = result;
     }
-
-    private String convertDateFormat(LocalDateTime now) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return now.format(formatter);
-    }
-
 }

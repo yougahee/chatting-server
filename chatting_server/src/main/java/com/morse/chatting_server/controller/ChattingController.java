@@ -33,13 +33,11 @@ public class ChattingController {
     }
 
     @PostMapping("/send/message")
-    public ResponseEntity<Void> sendMessage(@RequestHeader(value = "x-forward-useridx") String userIdx,
+    public ResponseEntity<Void> sendMessage(@RequestHeader(value = "x-forward-userIdx") String userIdx,
                                             @RequestHeader(value = "x-forward-email") String email,
                                             @RequestHeader(value = "x-forward-nickname") String nickname,
                                             @RequestBody ChattingData chattingData) throws IOException {
 
-
-        nickname = URLDecoder.decode(nickname, StandardCharsets.UTF_8);
         log.info("[send Message] chattingData presenterIdx : " + chattingData.getPresenterIdx() + " nickname : " + nickname + " Message : " + chattingData.getTextMessage());
         chattingService.sendToPresenterChattingMessage(chattingData, userIdx, nickname);
 

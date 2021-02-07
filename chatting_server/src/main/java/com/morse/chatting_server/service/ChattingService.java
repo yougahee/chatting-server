@@ -5,7 +5,9 @@ import com.morse.chatting_server.dto.request.ChattingData;
 import com.morse.chatting_server.enums.UserType;
 import com.morse.chatting_server.exception.DisconnectSessionException;
 import com.morse.chatting_server.exception.NotFoundException;
+import com.morse.chatting_server.model.ChattingLog;
 import com.morse.chatting_server.model.WebSocketSessionHashMap;
+import com.morse.chatting_server.repository.ChattingLogRepository;
 import com.morse.chatting_server.utils.JwtUtils;
 import com.morse.chatting_server.utils.ResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,9 +27,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class ChattingService {
 
-	private final ResponseMessage MESSAGE;
-	private final JwtUtils jwtUtils;
 	private final LiveCheckService liveCheckService;
+	private final ChattingLogRepository chattingLogRepository;
+	private final JwtUtils jwtUtils;
 
 	public void makeChattingRoom(WebSocketSession session, JsonObject message) throws IOException {
 		String token;
@@ -34,21 +38,21 @@ public class ChattingService {
 			token = message.get("token").getAsString();
 		} catch (NullPointerException ne) {
 			log.error(ne.getMessage());
-			sendError(session, MESSAGE.ROOM_IDX_FAIL);
+			sendError(session, ResponseMessage.ROOM_IDX_FAIL);
 			session.close();
 			return;
 		}
 
 		if (token == null || token.equals("")) {
 			log.error("token is null");
-			sendError(session, MESSAGE.TOKEN_NULL);
+			sendError(session, ResponseMessage.TOKEN_NULL);
 			session.close();
 			return;
 		}
 
 		Long presenterIdx = jwtUtils.isValidateToken(token);
 		if (presenterIdx == null) {
-			sendErrorCustom(session, "tokenException", MESSAGE.JWT_EXCEPTION);
+			sendErrorCustom(session, "tokenException", ResponseMessage.JWT_EXCEPTION);
 			session.close();
 			return;
 		}
@@ -57,22 +61,21 @@ public class ChattingService {
 		WebSocketSessionHashMap.insertSession(presenterIdx, session);
 	}
 
-	public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String user_idx, String nickname) throws IOException {
+	public void sendToPresenterChattingMessage(ChattingData chattingTextDTO, String userIdx, String nickname) throws IOException {
 		Long presenterIdx = chattingTextDTO.getPresenterIdx();
 		String userType = chattingTextDTO.getUserType();
 
 		if (presenterIdx == null) {
 			if (userType.equals(UserType.PRESENTER.getUserType()))
-				presenterIdx = Long.parseLong(user_idx);
+				presenterIdx = Long.parseLong(userIdx);
 			else
-				throw new NotFoundException(MESSAGE.PRESENTER_IDX_NOT_NULL);
+				throw new NotFoundException(ResponseMessage.PRESENTER_IDX_NOT_NULL);
 		}
 
-		//## 실제로 배포할 때는 IF문 안에 들어있는 두개 자리 바꾸기
 		if (!WebSocketSessionHashMap.isSessionExist(presenterIdx)) {
 			if (liveCheckService.checkLiveRoom(presenterIdx)) {
 				if (userType.equals(UserType.PRESENTER.getUserType()))
-					throw new DisconnectSessionException(MESSAGE.RECONNECT_SESSION);
+					throw new DisconnectSessionException(ResponseMessage.RECONNECT_SESSION);
 
 				//## 잠시 후에 다시 전송해주세요..
 				//## 클라한테 다시 요청하는 것보다 세션 재연결 요청 후 다시 연결이 되는 지 감지되면 데이터 보내주기.
@@ -80,9 +83,9 @@ public class ChattingService {
 				//liveCheckService.reconnectRequest(presenterIdx);
 
 				//일단, 세션 없다고 exception 보내줌
-				throw new NotFoundException(MESSAGE.NOT_FOUND_SESSION);
+				throw new NotFoundException(ResponseMessage.NOT_FOUND_SESSION);
 			} else {
-				throw new NotFoundException(MESSAGE.NOT_LIVE_ROOM_SESSION);
+				throw new NotFoundException(ResponseMessage.NOT_LIVE_ROOM_SESSION);
 			}
 		}
 
@@ -92,11 +95,12 @@ public class ChattingService {
 			JsonObject response = new JsonObject();
 			String time = new SimpleDateFormat("HH:mm").format(new Date());
 			response.addProperty("id", "sendChatting");
-			response.addProperty("nickname", nickname);
+			response.addProperty("nickname", URLDecoder.decode(nickname, StandardCharsets.UTF_8));
 			response.addProperty("message", chattingTextDTO.getTextMessage());
 			response.addProperty("time", time);
 
 			session.sendMessage(new TextMessage(response.toString()));
+			//chattingLogRepository.save(new ChattingLog(Integer.toUnsignedLong(0), presenterIdx, Long.parseLong(userIdx), nickname, chattingTextDTO.getTextMessage()));
 			log.info("[send Chatting] success : " + response.toString());
 		} catch (Throwable t) {
 			log.error("[send Chatting] error : " + t.getMessage());

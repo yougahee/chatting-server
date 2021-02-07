@@ -33,7 +33,6 @@ public class ChattingControllerAdvice {
 				.body(new ErrorMessage(nsme.getMessage(), HttpStatus.BAD_REQUEST.value(), req.getRequestURI()));
 	}
 
-	//## 재연결 요청 어떤 status code로 써야 맞는 걸까?
 	@ExceptionHandler(value = {DisconnectSessionException.class})
 	public ResponseEntity<ErrorMessage> disconnectSessionException(HttpServletRequest req, DisconnectSessionException dse) {
 		log.error(dse.getMessage(), dse);
@@ -82,8 +81,4 @@ public class ChattingControllerAdvice {
 				.badRequest()
 				.body(new ErrorMessage(je.getMessage(), HttpStatus.UNAUTHORIZED.value(), req.getRequestURI()));
 	}
-
-	//internal server error
-
-
 }

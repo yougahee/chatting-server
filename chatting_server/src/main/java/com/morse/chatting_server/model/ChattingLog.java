@@ -13,19 +13,21 @@ import java.util.Date;
 public class ChattingLog {
 
 	@Id
-	public String roomIdx;
+	private Long roomIdx;
 
-	public String userIdx;
-	public String nickname;
-	public String sendMessage;
-	public String sendTime;
+	private Long presenterIdx;
+	private Long userIdx;
+	private String nickname;
+	private String sendMessage;
+	private String sendTime;
 
 	public ChattingLog() {
 		this.sendTime = convertNow();
 	}
 
-	public ChattingLog(String roomIdx, String userIdx, String nickname, String sendMessage) {
+	public ChattingLog(Long roomIdx, Long presenterIdx, Long userIdx, String nickname, String sendMessage) {
 		this.roomIdx = roomIdx;
+		this.presenterIdx = presenterIdx;
 		this.userIdx = userIdx;
 		this.nickname = nickname;
 		this.sendMessage = sendMessage;
@@ -35,8 +37,8 @@ public class ChattingLog {
 	@Override
 	public String toString() {
 		return String.format(
-				"ChattingLog[room_idx=%s, user_idx=%s, nickname='%s', send_message='%s', send_time='%s']",
-				roomIdx, userIdx, nickname, sendMessage);
+				"ChattingLog[presenter_idx=%s, user_idx=%s, nickname='%s', send_message='%s', send_time='%s']",
+				presenterIdx, userIdx, nickname, sendMessage, sendTime);
 	}
 
 	public String convertNow() {
