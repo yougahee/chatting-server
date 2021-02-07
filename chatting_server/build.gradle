@@ -62,8 +62,8 @@ dependencies {
 	//http-client
 	compile 'org.apache.httpcomponents:httpclient:4.5.13'
 
-	//test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 sonarqube {
@@ -82,4 +82,5 @@ sonarqube {
 
 test {
 	useJUnitPlatform()
+	failFast = true
 }
