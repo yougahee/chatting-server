@@ -68,7 +68,7 @@ sonarqube {
 	properties {
 		property "sonar.host.url", "http://localhost:9000/"
 		property "sonar.login", "admin"
-		property "sonar.password", "admin1"
+		property "sonar.password", "admin"
 		property "sonar.projectKey", "morse-chatting"
 		property "sonar.projectName", "morse-chatting"
 		property "sonar.projectVersion", "1.0"
